@@ -5,6 +5,13 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "41ee6a1379344810b039b8c08a34cf56"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
   <title>Lab 9</title>
 
   <style>
@@ -88,6 +95,13 @@
   </main>
 
   <script>
+
+    class CalculationError extends Error {
+      constructor(message){
+        super(message);
+        this.name = "CalculationError";
+      }
+    }
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +109,119 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try{
+        if(operator == '/' && secondNum == '0'){
+          throw new CalculationError("You can't divide by zero");
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }catch(error){
+        output.innerHTML = error.message;
+        console.error(error.message);
+      }finally{
+        console.log("Calculation processed");
+      }
     });
+
+    window.onerror = function(message, source, lineno,colno, error){
+      console.log(`Global error caught: ${message} at line ${lineno}`);
+    }
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    var people = [
+  {
+    first: 'René',
+    last: 'Magritte',
+  },
+  {
+    first: 'Chaim',
+    last: 'Soutine',
+    birthday: '18930113',
+  },
+  {
+    first: 'Henri',
+    last: 'Matisse',
+  }
+];
+    for(const button of errorBtns){
+      if(button.textContent == "Console Log"){
+        button.addEventListener("click", function(event){
+          console.log("log");
+        });
+      }
+      if(button.textContent == "Console Error"){
+        button.addEventListener("click", function(event){
+          console.error("error");
+        });
+      }
+      if(button.textContent == "Console Dir"){
+        button.addEventListener("click", function(event){
+          console.dir(document.head);
+        });
+      }
+      if(button.textContent == "Console dirxml"){
+        button.addEventListener("click", function(event){
+          console.dirxml(document);
+        });
+      }
+      if(button.textContent == "Console Count"){
+        button.addEventListener("click", function(event){
+          console.count();
+        });
+      }
+      if(button.textContent == "Console Warn"){
+        button.addEventListener("click", function(event){
+          console.warn("warn");
+        });
+      }
+      if(button.textContent == "Console Assert"){
+        button.addEventListener("click", function(event){
+          console.assert(1>2);
+        });
+      }
+      if(button.textContent == "Console Clear"){
+        button.addEventListener("click", function(event){
+          console.clear();
+        });
+      }
+      if(button.textContent == "Console Group Start"){
+        button.addEventListener("click", function(event){
+          console.group("Console outputs");
+        });
+      }
+      if(button.textContent == "Console Group End"){
+        button.addEventListener("click", function(event){
+          console.groupEnd("Console outputs");
+        });
+      }
+      if(button.textContent == "Console Table"){
+        button.addEventListener("click", function(event){
+          console.table(people);
+        });
+      }
+      if(button.textContent == "Start Timer"){
+        button.addEventListener("click", function(event){
+          console.time();
+        });
+      }
+      if(button.textContent == "End Timer"){
+        button.addEventListener("click", function(event){
+          console.timeEnd();
+        });
+      }
+      if(button.textContent == "Console Trace"){
+        button.addEventListener("click", function(event){
+          console.trace();
+        });
+      }
+      if(button.textContent == "Trigger a Global Error"){
+        button.addEventListener("click", function(event){
+          undefinedFunction();
+        });
+      }
+    }
   </script>
 </body>
 
